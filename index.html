@@ -27,7 +27,7 @@
         bottom: 0;
         width: 100%;
         height: 63px;
-        background-color: #FFDBE2;
+        background-color: #ffdbe2;
         z-index: 1;
         transform: translateY(100%);
         transition: transform 0.6s ease, opacity 0.6s ease;
@@ -47,7 +47,7 @@
         width: 404px;
         max-width: 404px;
         height: 80px;
-        background-color: #FFF5F7; /* JS에서 adBgType으로 덮어씀 */
+        background-color: #fff5f7; /* JS에서 adBgType으로 덮어씀 */
         display: flex;
         align-items: center;
         justify-content: center;
@@ -154,7 +154,7 @@
       }
 
       .ad-cta {
-        background-color: #F37482;
+        background-color: #f37482;
         color: #fff;
         width: 60px;
         height: 30px;
@@ -165,7 +165,7 @@
         font-size: 12px;
       }
       .ad-cta:hover {
-        background-color: #F37482;
+        background-color: #f37482;
       }
 
       .gentle-shake {
@@ -244,23 +244,21 @@
         // ===== 파라미터(기본값 포함) =====
         const data = {
           // 이미지
-          logo:
-            qs.get('logo') ||
-            './logo.png',
-          product:
-            qs.get('product') ||
-            './image.png',
+          logo: qs.get('logo') || './logo.png',
+          product: qs.get('product') || './image.png',
 
           // 텍스트
-          brand: qs.get('brand') || '명품 BRAND',
-          line1: qs.get('line1') || '명품 BRAND',
-          line2: qs.get('line2') || '최대 65% 할인',
+          brand: qs.get('brand') || '{NAME}',
+          line1: qs.get('line1') || '{TEXT1}',
+          line2: qs.get('line2') || '{TEXT2}',
+          nameClolor: qs.get('nameClolor') || '{NAME_COLOR}',
+          lineClolor1: qs.get('lineClolor1') || '{TEXT_COLOR1}',
+          lineClolor2: qs.get('lineClolor2') || '{TEXT_COLOR2}',
           ctaText: qs.get('ctaText') || '구매하기',
-
           // 동작/색상
           cta: qs.get('cta') || '#', // 버튼 전용 이동
           click: qs.get('click') || '', // 배너 전체 클릭
-          bg: qs.get('bg') || '#FFDBE2', // 하단 바
+          bg: qs.get('bg') || '{BACKGROUND_COLOR}', // 하단 바
           shake: qs.get('shake') !== '0', // 기본 true
           autohide: parseInt(qs.get('autohide') || '0', 10) || 0,
           imp: qs.get('imp') || '',
@@ -275,7 +273,7 @@
 
           // 배너 본체 배경(.in-image-ad)
           adBgType: (qs.get('adBgType') || '').toLowerCase(), // '', 'solid', 'gradient'
-          adBgSolid: qs.get('adBgSolid') || '#FFF5F7',
+          adBgSolid: qs.get('adBgSolid') || '{AD_COLOR}',
           adBgStart: qs.get('adBgStart') || '#3a3a3a',
           adBgEnd: qs.get('adBgEnd') || '#1f1f1f',
         };
@@ -294,7 +292,9 @@
 
         // 하단 바 색
         barBg.style.backgroundColor = data.bg;
-
+        brandTx.style.color = data.nameClolor;
+        line1Tx.style.color = data.lineClolor1;
+        line2Tx.style.color = data.lineClolor2;
         // 배너 본체 배경(.in-image-ad)
         (function applyAdBackground() {
           if (data.adBgType === 'solid') {
