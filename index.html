@@ -27,7 +27,7 @@
         bottom: 0;
         width: 100%;
         height: 63px;
-        background-color: #000;
+        background-color: #FFDBE2;
         z-index: 1;
         transform: translateY(100%);
         transition: transform 0.6s ease, opacity 0.6s ease;
@@ -47,7 +47,7 @@
         width: 600px;
         max-width: 100%;
         height: 80px;
-        background-color: #282828; /* JS에서 adBgType으로 덮어씀 */
+        background-color: #FFF5F7; /* JS에서 adBgType으로 덮어씀 */
         display: flex;
         align-items: center;
         justify-content: center;
@@ -94,25 +94,25 @@
         margin: auto;
         font-weight: 700;
         font-size: 20px;
-        color: #fff;
+        color: #000000;
         white-space: nowrap;
       }
       .ad-text-hover {
         margin: auto;
         display: none;
-        color: #fff;
+        color: #000000;
         text-align: center;
       }
       .ad-line1 {
         font-size: 14px;
         font-weight: 400;
-        color: #fff;
+        color: #000000;
         text-align: center;
       }
       .ad-line2 {
         font-size: 18px;
         font-weight: bold;
-        color: #fff;
+        color: #000000;
         text-align: center;
       }
 
@@ -133,7 +133,7 @@
       .product-image {
         width: 127px;
         height: 73px;
-        object-fit: cover;
+        object-fit: contain;
         transition: transform 0.3s ease;
         transform-origin: center bottom;
       }
@@ -154,8 +154,8 @@
       }
 
       .ad-cta {
-        background-color: #fff;
-        color: #333;
+        background-color: #F37482;
+        color: #fff;
         width: 88px;
         height: 30px;
         border-radius: 5px;
@@ -165,7 +165,7 @@
         font-size: 14px;
       }
       .ad-cta:hover {
-        background-color: #f0f0f0;
+        background-color: #F37482;
       }
 
       .gentle-shake {
@@ -193,7 +193,7 @@
         }
       }
 
-      @media (max-width: 600px) {
+      @media (max-width: 404px) {
         .in-image-ad {
           height: 80px;
         }
@@ -246,10 +246,10 @@
           // 이미지
           logo:
             qs.get('logo') ||
-            'https://s3.ap-northeast-2.amazonaws.com/piclick.me.img/test/logo.png',
+            './logo.png',
           product:
             qs.get('product') ||
-            'https://s3.ap-northeast-2.amazonaws.com/piclick.me.img/test/item.png',
+            './image.png',
 
           // 텍스트
           brand: qs.get('brand') || '명품 BRAND',
@@ -260,7 +260,7 @@
           // 동작/색상
           cta: qs.get('cta') || '#', // 버튼 전용 이동
           click: qs.get('click') || '', // 배너 전체 클릭
-          bg: qs.get('bg') || '#000000', // 하단 바
+          bg: qs.get('bg') || '#FFDBE2', // 하단 바
           shake: qs.get('shake') !== '0', // 기본 true
           autohide: parseInt(qs.get('autohide') || '0', 10) || 0,
           imp: qs.get('imp') || '',
@@ -275,7 +275,7 @@
 
           // 배너 본체 배경(.in-image-ad)
           adBgType: (qs.get('adBgType') || '').toLowerCase(), // '', 'solid', 'gradient'
-          adBgSolid: qs.get('adBgSolid') || '#282828',
+          adBgSolid: qs.get('adBgSolid') || '#FFF5F7',
           adBgStart: qs.get('adBgStart') || '#3a3a3a',
           adBgEnd: qs.get('adBgEnd') || '#1f1f1f',
         };
