@@ -3,267 +3,230 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <title>In-Image Ad</title>
+    <title>In-Image Ad v2</title>
     <style>
-      html,
-      body {
+      * {
         margin: 0;
         padding: 0;
-        overflow: visible;
-        background: transparent;
-        height: 100%;
+        box-sizing: border-box;
       }
+      html,
       body {
-        position: relative;
         width: 100%;
         height: 100%;
+        overflow: hidden;
+        background: transparent;
         font-family: Pretendard, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
           'Noto Sans KR', sans-serif;
       }
-
-      /* 하단 바 */
       .in-image-bg {
         position: absolute;
         bottom: 0;
         width: 100%;
         height: 63px;
-        background-color: #FFDBE2;
-        z-index: 1;
+        background-color: #5f9728;
+        z-index: 5;
         transform: translateY(100%);
         transition: transform 0.6s ease, opacity 0.6s ease;
         opacity: 0;
+      }
+      .in-image-ad {
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        transform: translateX(-50%) translateY(100%);
+        width: 600px;
+        max-width: 100%;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        background: linear-gradient(to right, #f7ffef 0%, #e6edde 80%, #c1c9b1 100%);
+        opacity: 0;
+        z-index: 10;
+        transition: transform 0.6s ease, opacity 0.6s ease;
+        overflow: visible;
+        cursor: pointer;
       }
       .in-image-bg.visible {
         transform: translateY(0);
         opacity: 1;
       }
-
-      /* 배너 본체 */
-      .in-image-ad {
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 404px;
-        max-width: 404px;
-        height: 80px;
-        background-color: #FFF5F7; /* JS에서 adBgType으로 덮어씀 */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: opacity 0.6s ease;
-        z-index: 2;
-      }
-      .in-image-bg.visible ~ .in-image-ad {
+      .in-image-ad.visible {
+        transform: translateX(-50%) translateY(0);
         opacity: 1;
       }
-
       .ad-content {
         display: flex;
         align-items: center;
         justify-content: space-between;
         width: 100%;
-        max-width: 600px;
-        padding: 0 24px;
-        gap: 20px;
+        height: 100%;
+        padding: 0 36px;
+        gap: 40px;
+        position: relative;
       }
-
       .ad-logo {
         width: 69px;
         height: 52px;
-        flex-shrink: 0;
         object-fit: contain;
+        transition: transform 0.6s ease;
       }
-
-      .ad-middle {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        flex-grow: 1;
-        min-width: 0;
-      }
-      .ad-middle.vertical-layout {
-        flex-direction: column;
-        align-items: center;
-        gap: 6px;
-      }
-
-      .ad-text {
-        margin: auto;
-        font-weight: 700;
-        font-size: 20px;
-        color: #000000;
-        white-space: nowrap;
-      }
-      .ad-text-hover {
-        margin: auto;
-        display: none;
-        color: #000000;
-        text-align: center;
-      }
-      .ad-line1 {
-        font-size: 14px;
-        font-weight: 400;
-        color: #000000;
-        text-align: center;
-      }
-      .ad-line2 {
-        font-size: 18px;
-        font-weight: bold;
-        color: #000000;
-        text-align: center;
-      }
-
       .ad-products {
         display: flex;
         align-items: center;
+        height: 100%;
+        transition: transform 0.6s ease;
       }
       .product-image-wrapper {
-        width: 128px;
+        width: 90px;
         height: 100%;
         display: flex;
         justify-content: center;
         align-items: flex-end;
-        overflow: hidden;
+        overflow: visible;
+        position: relative;
         border-radius: 10px;
-        transition: transform 0.3s ease;
       }
       .product-image {
-        width: 127px;
-        height: 73px;
+        width: 100%;
+        height: 80%;
+        object-fit: cover;
+      }
+      .product-image-hover {
+        position: absolute;
+        top: -50px;
+        right: -18%;
+        width: 50%;
+        height: 100%;
+        z-index: 30;
+        opacity: 0;
+        transition: opacity 0.3s ease;
         object-fit: contain;
-        transition: transform 0.3s ease;
-        transform-origin: center bottom;
       }
-
-      /* hover */
-      .in-image-ad:hover .product-image-wrapper {
-        overflow: visible;
+      .in-image-ad:hover .product-image-hover {
+        opacity: 1;
       }
-      .in-image-ad:hover .product-image {
-        transform: scale(1.4);
-        z-index: 20;
-      }
-      .in-image-ad:hover .ad-text {
-        display: none;
-      }
-      .in-image-ad:hover .ad-text-hover {
-        display: block;
-      }
-
-      .ad-cta {
-        background-color: #F37482;
-        color: #fff;
-        width: 88px;
-        height: 30px;
-        border-radius: 5px;
-        cursor: pointer;
+      .ad-text {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%) !important;
+        opacity: 0;
+        transition: opacity 0.6s ease, transform 0.6s ease;
+        text-align: center;
         font-weight: bold;
-        border: none;
+        font-size: 20px;
+        color: #094d4d;
+        white-space: nowrap;
+        pointer-events: none;
+      }
+      .ad-line1 {
         font-size: 14px;
+        color: #094d4d;
       }
-      .ad-cta:hover {
-        background-color: #F37482;
+      .ad-line2 {
+        font-size: 20px;
+        font-weight: bold;
+        color: #000;
       }
-
-      .gentle-shake {
-        animation: gentle-shake 0.5s ease;
-        transform-origin: center center;
+      .font-g {
+        color: #094d4d;
+        font-weight: 800;
+        font-size: 24px;
       }
-      @keyframes gentle-shake {
+      .font-r {
+        color: #ff280b;
+        font-weight: 800;
+        font-size: 24px;
+      }
+      .bubble {
+        position: absolute;
+        bottom: 10px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: rgba(0, 150, 136, 0.3);
+        animation: bubbleUp 2s ease forwards;
+      }
+      @keyframes bubbleUp {
         0% {
-          transform: rotate(0deg);
-        }
-        20% {
-          transform: rotate(-5deg);
-        }
-        40% {
-          transform: rotate(5deg);
-        }
-        60% {
-          transform: rotate(-5deg);
-        }
-        80% {
-          transform: rotate(5deg);
+          transform: translateY(0) scale(0.8);
+          opacity: 1;
         }
         100% {
-          transform: rotate(0deg);
+          transform: translateY(-80px) scale(1.2);
+          opacity: 0;
         }
       }
-
-      @media (max-width: 404px) {
+      .move-left {
+        animation: moveLeft 0.6s ease forwards;
+        position: absolute;
+      }
+      .move-right {
+        animation: moveRight 0.6s ease forwards;
+        position: absolute;
+      }
+      @keyframes moveLeft {
+        0% {
+          left: 50%;
+          transform: translateX(-100%);
+        }
+        100% {
+          left: 40px;
+          transform: none;
+        }
+      }
+      @keyframes moveRight {
+        0% {
+          right: 50%;
+          transform: translateX(100%);
+        }
+        100% {
+          right: 0;
+          transform: none;
+        }
+      }
+      @media (max-width: 600px) {
         .in-image-ad {
           height: 80px;
-        }
-        .ad-content {
-          align-items: center;
-        }
-        .ad-middle {
-          width: 100%;
-        }
-        .ad-middle.vertical-layout {
-          flex-direction: column;
-          align-items: center;
-        }
-        .ad-text {
-          display: none !important;
-        }
-        .ad-text-hover {
-          display: block !important;
         }
       }
     </style>
   </head>
   <body>
-    <div class="in-image-bg" id="bg"></div>
-    <div class="in-image-ad" id="ad">
+    <div class="in-image-bg" id="inImageBg"></div>
+    <div class="in-image-ad" id="inImageAd" role="button" aria-label="광고 배너">
       <div class="ad-content">
-        <img class="ad-logo" id="logo" alt="브랜드 로고" />
-        <div class="ad-middle" id="adMiddle">
-          <div class="ad-text" id="brandText">브랜드</div>
-          <div class="ad-text-hover">
-            <div class="ad-line1" id="line1">브랜드</div>
-            <div class="ad-line2" id="line2">혜택 문구</div>
-          </div>
-          <button class="ad-cta" id="ctaBtn">구매하기</button>
-        </div>
-        <div class="ad-products">
+        <img class="ad-logo" id="adLogo" alt="브랜드 로고" />
+        <div class="ad-products" id="adProduct">
           <span class="product-image-wrapper" id="prodWrap">
-            <img class="product-image" id="product" alt="제품 이미지" />
+            <img class="product-image" id="prodBase" alt="제품 이미지" />
+            <img class="product-image-hover" id="prodHover" alt="제품 이미지(호버)" />
           </span>
         </div>
+        <div class="ad-text" id="adText">명품 BRAND</div>
       </div>
     </div>
 
     <script>
       (function () {
         const qs = new URLSearchParams(location.search);
-
-        // ===== 파라미터(기본값 포함) =====
-        const data = {
-          // 이미지
-          logo:
-            qs.get('logo') ||
-            './logo.png',
+        const params = {
+          logo: qs.get('logo') || 'https://www.maeil.com/resources/images/common/h_logo.png',
           product:
             qs.get('product') ||
-            './image.png',
+            'https://s3.ap-northeast-2.amazonaws.com/piclick.me.img/test/nukki.png',
+          hover:
+            qs.get('hover') ||
+            'https://s3.ap-northeast-2.amazonaws.com/piclick.me.img/test/jar.png',
 
-          // 텍스트
           brand: qs.get('brand') || '명품 BRAND',
-          line1: qs.get('line1') || '명품 BRAND',
-          line2: qs.get('line2') || '최대 65% 할인',
-          ctaText: qs.get('ctaText') || '구매하기',
-
-          // 동작/색상
-          cta: qs.get('cta') || '#', // 버튼 전용 이동
-          click: qs.get('click') || '', // 배너 전체 클릭
-          bg: qs.get('bg') || '#FFDBE2', // 하단 바
-          shake: qs.get('shake') !== '0', // 기본 true
+          line1: qs.get('line1') || '프리미엄',
+          line2: qs.get('line2') || '고농축 토마토 주스',
+          bg: qs.get('bg') || '#5F9728',
           autohide: parseInt(qs.get('autohide') || '0', 10) || 0,
           imp: qs.get('imp') || '',
+          click: qs.get('click') || '',
 
           // 사이즈/맞춤
           logoW: qs.get('logoW') || '',
@@ -272,122 +235,146 @@
           productW: qs.get('productW') || '',
           productH: qs.get('productH') || '',
           productFit: qs.get('productFit') || '',
+          hoverW: qs.get('hoverW') || '',
+          hoverH: qs.get('hoverH') || '',
+          hoverFit: qs.get('hoverFit') || '',
 
           // 배너 본체 배경(.in-image-ad)
-          adBgType: (qs.get('adBgType') || '').toLowerCase(), // '', 'solid', 'gradient'
-          adBgSolid: qs.get('adBgSolid') || '#FFF5F7',
-          adBgStart: qs.get('adBgStart') || '#3a3a3a',
-          adBgEnd: qs.get('adBgEnd') || '#1f1f1f',
+          adBgType: qs.get('adBgType') || '', // '', 'solid', 'gradient'
+          adBgSolid: qs.get('adBgSolid') || '#e6edde',
+          adBgStart: qs.get('adBgStart') || '#f7ffef',
+          adBgEnd: qs.get('adBgEnd') || '#c1c9b1',
         };
 
-        // ===== 요소 바인딩 =====
-        const barBg = document.getElementById('bg');
-        const ad = document.getElementById('ad');
-        const logo = document.getElementById('logo');
-        const product = document.getElementById('product');
+        const inImageAd = document.getElementById('inImageAd');
+        const inImageBg = document.getElementById('inImageBg');
+        const adLogo = document.getElementById('adLogo');
+        const adProduct = document.getElementById('adProduct');
         const prodWrap = document.getElementById('prodWrap');
-        const brandTx = document.getElementById('brandText');
-        const line1Tx = document.getElementById('line1');
-        const line2Tx = document.getElementById('line2');
-        const ctaBtn = document.getElementById('ctaBtn');
-        const adMiddle = document.getElementById('adMiddle');
+        const prodBase = document.getElementById('prodBase');
+        const prodHover = document.getElementById('prodHover');
+        const adText = document.getElementById('adText');
 
         // 하단 바 색
-        barBg.style.backgroundColor = data.bg;
+        inImageBg.style.backgroundColor = params.bg;
 
-        // 배너 본체 배경(.in-image-ad)
+        // 이미지/텍스트
+        adLogo.src = params.logo;
+        prodBase.src = params.product;
+        prodHover.src = params.hover;
+        adText.textContent = params.brand;
+
+        // 배너 본체 배경 적용
         (function applyAdBackground() {
-          if (data.adBgType === 'solid') {
-            ad.style.background = data.adBgSolid;
-          } else if (data.adBgType === 'gradient') {
-            ad.style.background = `linear-gradient(to right, ${data.adBgStart} 0%, ${data.adBgStart} 10%, ${data.adBgEnd} 100%)`;
+          const t = (params.adBgType || '').toLowerCase();
+          if (t === 'solid') {
+            inImageAd.style.background = params.adBgSolid || '#e6edde';
+          } else if (t === 'gradient') {
+            const s = params.adBgStart || '#f7ffef';
+            const e = params.adBgEnd || '#c1c9b1';
+            inImageAd.style.background = `linear-gradient(to right, ${s} 0%, ${s} 10%, ${e} 100%)`;
           } else {
-            // 기본 CSS(#282828) 유지
+            // 기본 CSS 배경 유지
           }
         })();
 
-        // 이미지/텍스트 주입
-        logo.src = data.logo;
-        product.src = data.product;
-        brandTx.textContent = data.brand;
-        line1Tx.textContent = data.line1;
-        line2Tx.textContent = data.line2;
-        ctaBtn.textContent = data.ctaText;
-
-        // 사이즈/맞춤 적용 유틸
+        // 크기/맞춤 적용
         function applyDim(el, w, h, fit) {
           if (!el) return;
           if (w) el.style.width = w;
           if (h) el.style.height = h;
           if (fit) el.style.objectFit = fit;
         }
-        // 로고 크기/맞춤
-        applyDim(logo, data.logoW, data.logoH, data.logoFit);
-        // 상품: wrapper와 이미지 모두 조절
-        if (data.productW) prodWrap.style.width = data.productW;
-        if (data.productH) prodWrap.style.height = data.productH;
-        applyDim(product, data.productW, data.productH, data.productFit);
+        applyDim(adLogo, params.logoW, params.logoH, params.logoFit);
+        if (params.productW) prodWrap.style.width = params.productW;
+        if (params.productH) prodWrap.style.height = params.productH;
+        applyDim(prodBase, params.productW, params.productH, params.productFit);
+        applyDim(prodHover, params.hoverW, params.hoverH, params.hoverFit);
 
-        // 로드 애니메이션 + 동작들
-        window.addEventListener('load', () => {
-          barBg.classList.add('visible');
-
-          // 모바일 레이아웃
-          if (window.innerWidth < 404 && adMiddle) {
-            adMiddle.classList.add('vertical-layout');
-          }
-
-          // 자동 숨김
-          if (data.autohide > 0) {
-            setTimeout(() => {
-              ad.style.display = 'none';
-              barBg.style.display = 'none';
-            }, data.autohide * 1000);
-          }
-
-          // 배너 전체 클릭
-          if (data.click) {
-            ad.addEventListener('click', () => {
-              window.open(data.click, '_blank', 'noopener');
-            });
-          }
-
-          // CTA 버튼 클릭 (배너 클릭과 중복 방지)
-          ctaBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (data.cta && data.cta !== '#') {
-              window.open(data.cta, '_blank', 'noopener');
-            } else {
-              alert('광고 클릭! 광고주 웹사이트로 이동합니다.');
-            }
+        // 트래킹/오토하이드/클릭
+        if (params.imp) {
+          const t = new Image();
+          t.src = params.imp;
+        }
+        if (params.autohide > 0) {
+          setTimeout(() => {
+            inImageAd.style.display = 'none';
+            inImageBg.style.display = 'none';
+          }, params.autohide * 1000);
+        }
+        if (params.click) {
+          inImageAd.addEventListener('click', () => {
+            window.open(params.click, '_blank', 'noopener');
           });
+        }
 
-          // 노출 트래킹
-          if (data.imp) {
-            const t = new Image();
-            t.src = data.imp;
-          }
-
-          // 버튼 부드러운 흔들림
-          let shakeInterval = null;
-          const startShake = () => {
-            if (!data.shake || shakeInterval) return;
-            shakeInterval = setInterval(() => {
-              ctaBtn.classList.add('gentle-shake');
-              setTimeout(() => ctaBtn.classList.remove('gentle-shake'), 1000);
-            }, 2000);
-          };
-          const stopShake = () => {
-            if (shakeInterval) {
-              clearInterval(shakeInterval);
-              shakeInterval = null;
-              ctaBtn.classList.remove('gentle-shake');
-            }
-          };
-          startShake();
-          ctaBtn.addEventListener('mouseenter', stopShake);
-          ctaBtn.addEventListener('mouseleave', startShake);
+        // 애니메이션
+        window.addEventListener('load', () => {
+          inImageAd.classList.add('visible');
+          inImageBg.classList.add('visible');
+          setTimeout(() => {
+            adLogo.classList.add('move-left');
+            adProduct.classList.add('move-right');
+            setTimeout(() => {
+              requestAnimationFrame(() => {
+                adText.style.opacity = '1';
+                adText.style.transform = 'scale(1)';
+              });
+            }, 400);
+          }, 600);
+          startDefaultBubbles();
         });
+
+        let defaultBubbleInterval = null,
+          hoverBubbleInterval = null;
+        function startDefaultBubbles() {
+          defaultBubbleInterval = setInterval(() => {
+            for (let i = 0; i < 3; i++) {
+              const b = document.createElement('span');
+              b.className = 'bubble';
+              b.style.left = `${Math.random() * 20 + 75}%`;
+              b.style.animationDelay = `${Math.random()}s`;
+              inImageAd.appendChild(b);
+              b.addEventListener('animationend', () => b.remove());
+            }
+          }, 3000);
+        }
+        function stopDefaultBubbles() {
+          if (defaultBubbleInterval) clearInterval(defaultBubbleInterval);
+          defaultBubbleInterval = null;
+        }
+
+        inImageAd.addEventListener('mouseenter', () => {
+          adText.innerHTML = `
+            <div class="ad-line1">${escapeHtml(params.brand)}</div>
+            <div class="ad-line2"><span class="font-g">${escapeHtml(params.line1)}</span>
+            <span class="font-r">${escapeHtml(params.line2)}</span></div>`;
+          stopDefaultBubbles();
+          hoverBubbleInterval = setInterval(() => {
+            for (let i = 0; i < 5; i++) {
+              const b = document.createElement('span');
+              b.className = 'bubble';
+              b.style.left = `${Math.random() * 20 + 75}%`;
+              b.style.animationDelay = `${Math.random()}s`;
+              inImageAd.appendChild(b);
+              b.addEventListener('animationend', () => b.remove());
+            }
+          }, 500);
+        });
+        inImageAd.addEventListener('mouseleave', () => {
+          adText.textContent = params.brand;
+          if (hoverBubbleInterval) clearInterval(hoverBubbleInterval);
+          startDefaultBubbles();
+        });
+
+        function escapeHtml(s) {
+          return String(s)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+        }
       })();
     </script>
   </body>
