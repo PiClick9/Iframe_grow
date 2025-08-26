@@ -416,6 +416,26 @@
           // 리사이즈 대응
           window.addEventListener('resize', placeCtaByViewport);
         });
+
+        try {
+          const params = new URLSearchParams(location.search);
+          if (params.get('postClick') === '1') {
+            const previewId = params.get('previewId') || '';
+            // 부모에게 보낼 대상 origin을 명시 (보안)
+            const parentOrigin = location.origin; // 예: https://piclick9.github.io (템플릿이 호스팅된 origin)
+
+            // 문서 어디든 클릭 시 부모에 신호 전송
+            document.addEventListener('click', function () {
+              // 부모가 신뢰할 수 있는 origin 목록에서 이 origin을 허용해야 함
+              window.parent?.postMessage(
+                { type: 'AISUM_IFRAME_CLICK', previewId },
+                '*' // 부모가 origin 체크를 하므로 여기선 * 사용 가능
+              );
+            });
+          }
+        } catch (e) {
+          console.warn('postMessage init failed:', e);
+        }
       })();
     </script>
   </body>
