@@ -336,7 +336,7 @@
 
         // ===== 뷰포트에 따라 CTA를 ad-middle로 이동(모바일) 또는 복귀(데스크탑) =====
         function placeCtaByViewport() {
-          const isMobile = window.innerWidth < 600;
+          const isMobile = window.innerWidth < 404;
           if (isMobile) {
             // 중앙 영역만 세로가 되도록 클래스 부여 & 버튼 삽입
             adMiddle.classList.add('vertical-layout');
