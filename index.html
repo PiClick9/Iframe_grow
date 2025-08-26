@@ -195,6 +195,9 @@
       }
 
       @media (max-width: 404px) {
+        .ad-content {
+          gap: 0;
+        }
         .in-image-ad {
           height: 80px; /* 고정 높이 유지(원하면 auto로 바꿔도 됨) */
           width: 300px;
@@ -206,7 +209,6 @@
         .ad-middle.vertical-layout {
           flex-direction: column;
           align-items: center;
-          gap: 6px;
         }
         .ad-text {
           display: none !important;
@@ -216,6 +218,8 @@
         }
         .ad-cta {
           margin-top: 4px;
+          width: 58px;
+          font-size: 10px;
         } /* ad-middle 안으로 들어가면 아래 여백 */
       }
     </style>
