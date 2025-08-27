@@ -44,8 +44,8 @@
         bottom: 0;
         left: 50%;
         transform: translateX(-50%);
-        width: 600px;
-        max-width: 100%;
+        width: 404px;
+        max-width: 404px;
         height: 80px;
         background-color: #fff5f7; /* JS에서 adBgType으로 덮어씀 */
         display: flex;
@@ -66,7 +66,7 @@
         align-items: center;
         justify-content: space-between;
         width: 100%;
-        max-width: 600px;
+        max-width: 404px;
         padding: 0 24px;
         gap: 20px;
       }
@@ -213,7 +213,7 @@
       }
 
       /* 모바일: 중앙 영역(ad-middle)만 세로 스택 */
-      @media (max-width: 600px) {
+      @media (max-width: 404px) {
         .ad-content {
           gap: 0;
           height: 100%;
@@ -248,12 +248,12 @@
   <body>
     <div class='in-image-bg' id='bg'>
       <button id='close'>
-        <img src='./close.png' alt='close' />
+        <img src='https://static.piclick.kr/images/logos/close.png' alt='close' />
       </button>
     </div>
     <div class='in-image-ad' id='ad'>
       <a id='aisum' href='https://aedi.ai/' target='_blank'>
-        <img src='./aisum.png' alt='aisum' />
+        <img src='https://static.piclick.kr/images/logos/aisum.png' alt='aisum' />
       </a>
       <div class='ad-content' id='adContent'>
         <img class='pixel' id='pixel' />
@@ -386,7 +386,7 @@
 
         // ===== 뷰포트에 따라 CTA를 ad-middle로 이동(모바일) 또는 복귀(데스크탑) =====
         function placeCtaByViewport() {
-          const isMobile = window.innerWidth < 600;
+          const isMobile = window.innerWidth < 404;
           if (isMobile) {
             // 중앙 영역만 세로가 되도록 클래스 부여 & 버튼 삽입
             adMiddle.classList.add('vertical-layout');
