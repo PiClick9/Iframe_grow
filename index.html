@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang='ko'>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=no' />
     <title>In-Image Ad</title>
     <style>
       html,
@@ -44,8 +44,8 @@
         bottom: 0;
         left: 50%;
         transform: translateX(-50%);
-        width: 404px;
-        max-width: 404px;
+        width: 600px;
+        max-width: 100%;
         height: 80px;
         background-color: #fff5f7; /* JS에서 adBgType으로 덮어씀 */
         display: flex;
@@ -58,7 +58,9 @@
       .in-image-bg.visible ~ .in-image-ad {
         opacity: 1;
       }
-
+      .pixel {
+        display: none;
+      }
       .ad-content {
         display: flex; /* 항상 가로 정렬 유지 */
         align-items: center;
@@ -104,20 +106,22 @@
         text-align: center;
       }
       .ad-line1 {
-        font-size: 10px;
+        font-size: 12px;
         font-weight: 400;
         color: #000000;
         text-align: center;
+        margin-bottom: 2px;
       }
       .ad-line2 {
-        font-size: 14px;
-        font-weight: 800;
+        font-size: 17px;
+        font-weight: 700;
         color: #000000;
         text-align: center;
       }
 
       .ad-products {
         display: flex;
+        height: 100%;
         align-items: center;
       }
       .product-image-wrapper {
@@ -168,6 +172,20 @@
       .ad-cta:hover {
         background-color: #f37482;
       }
+      #close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+      }
+      #aisum {
+        position: absolute;
+        top: 3px;
+        right: 5px;
+      }
 
       .gentle-shake {
         animation: gentle-shake 0.5s ease;
@@ -194,13 +212,16 @@
         }
       }
 
-      @media (max-width: 404px) {
+      /* 모바일: 중앙 영역(ad-middle)만 세로 스택 */
+      @media (max-width: 600px) {
         .ad-content {
           gap: 0;
+          height: 100%;
+          padding: 0 8px;
         }
         .in-image-ad {
           height: 80px; /* 고정 높이 유지(원하면 auto로 바꿔도 됨) */
-          width: 300px;
+          width: 330px;
         }
         /* ad-content는 그대로 가로 유지 (중요!) */
         .ad-middle {
@@ -217,48 +238,65 @@
           display: block !important;
         }
         .ad-cta {
-          margin-top: 4px;
-          width: 58px;
-          font-size: 10px;
+          height: 18px;
+          width: 60px;
+          font-size: 8px;
         } /* ad-middle 안으로 들어가면 아래 여백 */
       }
     </style>
   </head>
   <body>
-    <div class="in-image-bg" id="bg"></div>
-    <div class="in-image-ad" id="ad">
-      <div class="ad-content" id="adContent">
-        <img class="ad-logo" id="logo" alt="브랜드 로고" />
+    <div class='in-image-bg' id='bg'>
+      <button id='close'>
+        <img src='./close.png' alt='close' />
+      </button>
+    </div>
+    <div class='in-image-ad' id='ad'>
+      <a id='aisum' href='https://aedi.ai/' target='_blank'>
+        <img src='./aisum.png' alt='aisum' />
+      </a>
+      <div class='ad-content' id='adContent'>
+        <img class='pixel' id='pixel' />
+        <img class='ad-logo' id='logo' alt='브랜드 로고' />
 
         <!-- 가운데(텍스트 영역) -->
-        <div class="ad-middle" id="adMiddle">
-          <div class="ad-text" id="brandText">브랜드</div>
-          <div class="ad-text-hover">
-            <div class="ad-line1" id="line1">브랜드</div>
-            <div class="ad-line2" id="line2">혜택 문구</div>
+        <div class='ad-middle' id='adMiddle'>
+          <div class='ad-text' id='brandText'>브랜드</div>
+          <div class='ad-text-hover'>
+            <div class='ad-line1' id='line1'>브랜드</div>
+            <div class='ad-line2' id='line2'>혜택 문구</div>
           </div>
         </div>
 
         <!-- 상품 이미지 -->
-        <div class="ad-products">
-          <span class="product-image-wrapper" id="prodWrap">
-            <img class="product-image" id="product" alt="제품 이미지" />
+        <div class='ad-products'>
+          <span class='product-image-wrapper' id='prodWrap'>
+            <img class='product-image' id='product' alt='제품 이미지' />
           </span>
         </div>
 
         <!-- CTA 버튼: 데스크탑은 상품 오른쪽에 위치 -->
-        <button class="ad-cta" id="ctaBtn">구매하기</button>
+        <button class='ad-cta' id='ctaBtn'>구매하기</button>
       </div>
     </div>
 
     <script>
       (function () {
+        const isValidUrl = (u) => /^https?:\/\//.test(u) && !/\{.+\}/.test(u);
+
+        document.querySelector('#close').addEventListener('click', function () {
+          document.querySelector('.in-image-bg').remove();
+          document.querySelector('.in-image-ad').remove();
+        });
+
         const qs = new URLSearchParams(location.search);
 
         // ===== 파라미터(기본값 포함) =====
         const data = {
-          logo: qs.get('logo') || './logo.png',
-          product: qs.get('product') || './image.png',
+          // 이미지
+          logo: qs.get('logo') || '{IMAGE_LOGO}',
+          product: qs.get('product') || '{IMAGE1}',
+          pixel: qs.get('pixel') || '{PIXEL_TRACKER}',
 
           brand: qs.get('brand') || '{NAME}',
           line1: qs.get('line1') || '{TEXT1}',
@@ -267,9 +305,11 @@
           lineClolor1: qs.get('lineClolor1') || '{TEXT_COLOR1}',
           lineClolor2: qs.get('lineClolor2') || '{TEXT_COLOR2}',
           ctaText: qs.get('ctaText') || '구매하기',
+          ctaBg: qs.get('ctaBg') || '{BUTTON_BACKGROUND_COLOR}',
+          ctaColor: qs.get('ctaColor') || '{BUTTON_TEXT_COLOR}',
 
-          cta: qs.get('cta3') || '#', // 버튼 전용 이동
-          click: qs.get('click3') || '', // 배너 전체 클릭
+          cta: qs.get('cta') || '{CLICK_URL}', // 버튼 전용 이동
+          click: qs.get('click') || '{CLICK_URL}', // 배너 전체 클릭
           bg: qs.get('bg') || '{BACKGROUND_COLOR}',
           shake: qs.get('shake') !== '0',
           autohide: parseInt(qs.get('autohide') || '0', 10) || 0,
@@ -291,8 +331,10 @@
         // ===== 요소 =====
         const barBg = document.getElementById('bg');
         const ad = document.getElementById('ad');
+        const brandLink = document.getElementById('aisum');
         const adContent = document.getElementById('adContent');
         const logo = document.getElementById('logo');
+        const pixel = document.getElementById('pixel');
         const product = document.getElementById('product');
         const prodWrap = document.getElementById('prodWrap');
         const brandTx = document.getElementById('brandText');
@@ -306,6 +348,9 @@
         brandTx.style.color = data.nameClolor;
         line1Tx.style.color = data.lineClolor1;
         line2Tx.style.color = data.lineClolor2;
+        ctaBtn.style.backgroundColor = data.ctaBg;
+        ctaBtn.style.color = data.ctaColor;
+        ad.style.background = data.adBgSolid;
 
         // 배경 스타일
         (function applyAdBackground() {
@@ -320,6 +365,7 @@
 
         // 콘텐츠 주입
         logo.src = data.logo;
+        pixel.src = data.pixel;
         product.src = data.product;
         brandTx.textContent = data.brand;
         line1Tx.textContent = data.line1;
@@ -340,7 +386,7 @@
 
         // ===== 뷰포트에 따라 CTA를 ad-middle로 이동(모바일) 또는 복귀(데스크탑) =====
         function placeCtaByViewport() {
-          const isMobile = window.innerWidth < 404;
+          const isMobile = window.innerWidth < 600;
           if (isMobile) {
             // 중앙 영역만 세로가 되도록 클래스 부여 & 버튼 삽입
             adMiddle.classList.add('vertical-layout');
@@ -355,7 +401,12 @@
             }
           }
         }
-
+        // 로고 링크 클릭 시 배너 전체 클릭 전파 방지
+        if (brandLink) {
+          brandLink.addEventListener('click', (e) => {
+            e.stopPropagation();
+          });
+        }
         window.addEventListener('load', () => {
           barBg.classList.add('visible');
 
@@ -370,17 +421,19 @@
             }, data.autohide * 1000);
           }
 
-          // 배너 전체 클릭
-          if (data.click) {
-            ad.addEventListener('click', () => {
+          // 배너 전체 클릭 (유효한 URL일 때만, 링크/버튼 클릭은 무시)
+          ad.addEventListener('click', (e) => {
+            // 로고 링크나 CTA 버튼 내부 클릭이면 배너 클릭 무시
+            if (e.target.closest('#aisum') || e.target.closest('#ctaBtn')) return;
+            if (isValidUrl(data.click)) {
               window.open(data.click, '_blank', 'noopener');
-            });
-          }
+            }
+          });
 
           // CTA 버튼 클릭 (배너 클릭과 중복 방지)
           ctaBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (data.cta && data.cta !== '#') {
+            if (isValidUrl(data.cta)) {
               window.open(data.cta, '_blank', 'noopener');
             } else {
               alert('광고 클릭! 광고주 웹사이트로 이동합니다.');
